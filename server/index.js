@@ -10,65 +10,65 @@ app.use(express.json());
 
 
 // ROUTES // RESTFul API
-// create a todo
-app.post("/todos", async (req, response) => {
+// create a cyclists
+app.post("/cyclists", async (request, response) => {
     try {
       const { description } = request.body;
-      const newTodo = await pool.query(
+      const newCyclists = await pool.query(
         "INSERT INTO cyclists (description) VALUES($1) RETURNING *",
         [description]
       );
   
       // This is a built-in middleware function in Express. 
       // It parses incoming requests with JSON payloads and is based on body-parser.
-      response.json(newTodo.rows[0]);
+      response.json(newCyclists.rows[0]);
     } catch (err) {
-      console.error(err.message);
+      console.error("POST ERROR:" + err.message);
     }
   });
 
-// get all todos
-app.get("/todos", async (request,response) => {
+// get all cyclistss
+app.get("/cyclists", async (request,response) => {
     try {
-        const allTodos = await pool.query("SELECT * FROM cyclists");
-        response.json(allTodos.rows)
+        const allCyclists = await pool.query("SELECT * FROM cyclists");
+        response.json(allCyclists.rows)
     } catch(e) {
-        console.error(err.message)
+        console.error("GET ERROR:" + err.message)
     }
 });
 
-// get a todo 
-app.get("/todos/:id", async (request, response) => {
+// get a cyclists 
+app.get("/cyclists/:id", async (request, response) => {
     try {
         const { id } = request.params;
-        const todo = await pool.query("SELECT * FROM cyclists WHERE cyclist_id = $1", [id]);
-        response.json(todo.rows[0]);
+        const cyclists = await pool.query("SELECT * FROM cyclists WHERE cyclist_id = $1", [id]);
+        response.json(cyclists.rows[0]);
 
     } catch (err) {
-        console.error(err.message)
+        console.error("GET SINGLE ERROR:" + err.message)
     }
 })
 
-// update a todo
-app.put("/todos/:id", async (request, respone) => {
+// update a cyclists
+app.put("/cyclists/:id", async (request, respone) => {
     try {
         const {id} = request.params;
         const {description} = request.body;
-        const updateTodo = await pool.query("UPDATE cyclists SET description = $1 WHERE cyclist_id = $2", [description, id]);
+        const updateCyclist = await pool.query("UPDATE cyclists SET description = $1 WHERE cyclist_id = $2", [description, id]);
         respone.json("Cyclists was updated");
     } catch (err) {
-        console.error(err.message)
+        console.error("PUT ERROR:" + err.message)
     }
 })
 
-// delete a todo 
-app.delete("/todos/:id", async (request, response) => {
+// delete a cyclists 
+app.delete("/cyclists/:id", async (request, response) => {
     try {
         const { id } = request.params;
-        const deleteTodo = await pool.query("DELETE FROM cyclists WHERE cyclist_id = $1", [id]);
+        const deleteCyclist = await pool.query("DELETE FROM cyclists WHERE cyclist_id = $1", [id]);
         response.json("Cyclist was deleted");
     } catch (err) {
-        console.error(err.message)
+        console.error("DELETE ERROR:" + err.message)
     }
 })
 
